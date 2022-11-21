@@ -3,6 +3,9 @@ package com.board.service;
 import com.board.model.Board;
 import com.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +18,18 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
 
-    @Override
-    public List<Board> list() throws Exception{
+//    @Override
+//    public List<Board> list() throws Exception{
+//
+//        List<Board> boardList = boardRepository.findAll();
+//        return boardList;
+//    }
 
-        List<Board> boardList = boardRepository.findAll(Sort.by(Sort.Direction.DESC,"id"));
-        return boardList;
+    @Override
+    public Page<Board> pageList(Pageable pageable){
+        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber()-1);
+        pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "id"));
+        return boardRepository.findAll(pageable);
     }
 
     @Override

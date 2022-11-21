@@ -45,7 +45,43 @@
 
   <a class = "btn btn-primary float-end" th:href="@{/board/write}" type="button">글쓰기</a>
 
-  </button>
+  <nav style="text-align: center;">
+    <ul class="pagination"
+        th:with="start=${T(java.lang.Math).floor(boardList.number/10) * 10 +1 },
+                 last=(${start + 9 < boardList.totalPages ? start + 9 : boardList.totalPages})">
+
+
+
+      <li>
+        <a th:href="@{/board/list(page=1)}" aria-label="First">
+          <span aria-hidden="true">처음</span>
+        </a>
+      </li>
+
+      <li th:class="${boardList.first} ? 'disabled'">
+        <a th:href="${boardList.first} ? '#' :@{/board/list(page=${boardList.number})}" aria-label="Previous">
+          <span aria-hidden="true">&lt;</span>
+        </a>
+      </li>
+
+      <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == boardList.number + 1} ? 'active'">
+        <a th:text="${page}" th:href="@{/board/list(page=${page})}"></a>
+      </li>
+
+      <li th:class="${boardList.last} ? 'disabled'">
+        <a th:href="${boardList.last} ? '#' : @{/board/list(page=${boardList.number + 2})}" aria-label="Next">
+          <span aria-hidden="true">&gt;</span>
+        </a>
+      </li>
+
+      <li>
+        <a th:href="@{/board/list(page=${boardList.totalPages})}" aria-label="Last">
+          <span aria-hidden="true">끝</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
 </div>
 
 

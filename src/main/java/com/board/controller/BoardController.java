@@ -3,6 +3,9 @@ package com.board.controller;
 import com.board.model.Board;
 import com.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +23,12 @@ public class BoardController {
 
     //게시글 조회
     @GetMapping("/list")
-    public String boardList(Model model) throws Exception {
+    public String boardList(Model model, @PageableDefault Pageable pageable) throws Exception {
 
-        List<Board> boardList = boardService.list();
-        model.addAttribute("boardList", boardList);
+//        List<Board> boardList = boardService.list();
+        model.addAttribute("boardList", boardService.pageList(pageable));
+
+
         return "board/index";
     }
 
@@ -37,6 +42,7 @@ public class BoardController {
     public String boardWrite(@ModelAttribute Board board, HttpServletResponse response) throws Exception{
         boardService.write(board);
         response.sendRedirect("http://localhost:8080/board/list");
+
         return null;
     }
 
